@@ -1,19 +1,24 @@
 package com.zezzi.eventzezziapp.ui.meals.view
 
-import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.zezzi.eventzezziapp.data.networking.response.MealsCategoriesResponse
+import androidx.lifecycle.viewModelScope
 import com.zezzi.eventzezziapp.data.repository.MealsRepository
+import kotlinx.coroutines.launch
 
 class MealsCategoriesViewModel(private val repository: MealsRepository = MealsRepository()): ViewModel() {
-    suspend fun getMeals(): MealsCategoriesResponse? {
-        return try {
-            val response = repository.getMeals()
-            // Si la respuesta es exitosa, se imprime en el Logcat
-            Log.d("MealsCategoriesViewModel", "Response: $response")
-            response
-        } catch (e: Exception) {
-            null
+    var categoryUiState by mutableStateOf(MealsCategoryUiState(emptyList()))
+        private set
+
+    fun getMeals() {
+        categoryUiState = MealsCategoryUiState(emptyList(), loading = true)
+
+        viewModelScope.launch {
+            categoryUiState = MealsCategoryUiState(
+                categories = repository.getMeals().categories
+            )
         }
     }
 }

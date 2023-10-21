@@ -1,160 +1,109 @@
 package com.zezzi.eventzezziapp.ui.meals.view
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Surface
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import coil.compose.rememberAsyncImagePainter
-import com.zezzi.eventzezziapp.data.networking.response.MealResponse
+import coil.compose.AsyncImage
 import com.zezzi.eventzezziapp.navigation.AppBar
+import com.zezzi.eventzezziapp.navigation.NavigationState
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun MealsCategoriesScreen(
     navController: NavController,
     viewModel: MealsCategoriesViewModel = viewModel()
 ) {
-    // Se crea un estado mutable para almacenar los datos de la API
-    val rememberedMeals: MutableState<List<MealResponse>> =
-        remember { mutableStateOf(emptyList()) }
-
-    // Se obtienen los datos de la API
-    LaunchedEffect(key1 = Unit) {
-        try {
-            val response = viewModel.getMeals()
-            rememberedMeals.value = response?.categories.orEmpty()
-        } catch (e: Exception) {
-            // Se muestra un mensaje de error
-            e.printStackTrace()
-        }
+    if (viewModel.categoryUiState.categories.isEmpty()) {
+        viewModel.getMeals()
     }
 
     Scaffold(
         topBar = {
-            AppBar(title = "Recepies", navController = navController)
+            AppBar(title = "Categories", navController = navController)
         }
     ) {
-        Column(
-            modifier = Modifier
-                .padding(it)
-                .fillMaxSize()
-                .background(color = Color(185, 125, 246))
-                .verticalScroll(rememberScrollState()),
+        if (viewModel.categoryUiState.loading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-            rememberedMeals.value.forEach { meal ->
-                Surface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp)
-                        .shadow(
-                            elevation = 10.dp,
-                            shape = RoundedCornerShape(20.dp),
-                        ),
-                    shape = RoundedCornerShape(20.dp),
-                    color = Color(220, 186, 255)
-                ) {
-                    Row(
+                CircularProgressIndicator(
+                    modifier = Modifier.width(64.dp),
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+        } else {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                contentPadding = it,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = Color(185, 125, 246))
+
+            ) {
+                items(viewModel.categoryUiState.categories) { meal ->
+                    Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(10.dp)
+                            .padding(8.dp)
+                            .shadow(
+                                elevation = 10.dp,
+                                shape = RoundedCornerShape(20.dp),
+                            ),
+                        onClick = {
+                            navController.navigate("${NavigationState.Meals.route}/${meal.name}")
+                        }
                     ) {
-
-                        Image(
-                            painter = rememberAsyncImagePainter(model = meal.imageUrl),
-                            contentDescription = null,
+                        Column(
                             modifier = Modifier
-                                .size(85.dp)
-                                .padding(2.dp)
-                                .border(
-                                    width = 1.dp,
-                                    color = Color(0, 0, 0),
-                                    shape = RoundedCornerShape(20.dp)
-                                ),
-                        )
-                        Column {
-                            Text(
-                                text = "Category Name",
-                                modifier = Modifier
-                                    .padding(5.dp)
-                                    .fillMaxWidth(),
-                                fontStyle = FontStyle.Italic,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 18.sp,
-                                textAlign = TextAlign.Center
-
-                            )
-                            Spacer(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(3.dp)
-                                    .padding(5.dp, 0.dp)
-                                    .background(Color(0, 0, 0))
-                            )
+                                .padding(16.dp)
+                                .fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
                             Text(
                                 text = meal.name,
-                                modifier = Modifier
-                                    .padding(5.dp)
-                                    .fillMaxWidth(),
-                                fontSize = 16.sp,
                                 textAlign = TextAlign.Center,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Spacer(
+                                fontWeight = FontWeight.Bold,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(3.dp)
-                                    .padding(5.dp, 0.dp)
-                                    .background(Color(0, 0, 0))
+                                    .padding(8.dp)
+                            )
+                            AsyncImage(
+                                model = meal.imageUrl,
+                                contentDescription = null,
                             )
                             Text(
-                                text = "Date: 10 Month 9 Day 2023",
-                                modifier = Modifier
-                                    .padding(5.dp)
-                                    .fillMaxWidth(),
-                                fontSize = 14.sp,
-                                textAlign = TextAlign.Left
-                            )
-                            Spacer(
+                                text = "Numero del producto: ${meal.id}",
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Bold,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(3.dp)
-                                    .padding(5.dp, 0.dp)
-                                    .background(Color(0, 0, 0))
-                            )
-                            Text(
-                                text = "ID: ${meal.id}",
-                                modifier = Modifier
-                                    .padding(5.dp),
-                                fontSize = 14.sp,
+                                    .padding(8.dp)
                             )
                         }
                     }

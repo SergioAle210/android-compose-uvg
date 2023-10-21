@@ -98,7 +98,7 @@ fun MealsCategoriesScreen(
                                 contentDescription = null,
                             )
                             Text(
-                                text = "Numero del producto: ${meal.id}",
+                                text = "ID: ${meal.id}",
                                 textAlign = TextAlign.Center,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier

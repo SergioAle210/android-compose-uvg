@@ -17,7 +17,6 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,7 +53,7 @@ fun MealsCategoriesScreen(
             ) {
                 CircularProgressIndicator(
                     modifier = Modifier.width(64.dp),
-                    color = MaterialTheme.colorScheme.primary
+                    color = Color(229, 204, 255, 255)
                 )
             }
         } else {

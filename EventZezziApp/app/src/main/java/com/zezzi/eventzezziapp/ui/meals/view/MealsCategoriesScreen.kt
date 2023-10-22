@@ -13,9 +13,9 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -51,9 +51,9 @@ fun MealsCategoriesScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(
-                    modifier = Modifier.width(64.dp),
-                    color = Color(229, 204, 255, 255)
+                LinearProgressIndicator(
+                    modifier = Modifier.width(80.dp),
+                    color = Color(117, 14, 224, 255)
                 )
             }
         } else {
@@ -95,14 +95,6 @@ fun MealsCategoriesScreen(
                             AsyncImage(
                                 model = meal.imageUrl,
                                 contentDescription = null,
-                            )
-                            Text(
-                                text = "ID: ${meal.id}",
-                                textAlign = TextAlign.Center,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(8.dp)
                             )
                         }
                     }

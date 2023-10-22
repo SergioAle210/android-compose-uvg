@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material3.Button
@@ -25,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -41,7 +41,7 @@ fun DishScreen(
     id: String,
     viewModel2: DishCategoriesViewModel = viewModel()
 ) {
-    var i = 1
+    var recorrido = 1
     val context = LocalContext.current
     if (viewModel2.instructionsUiState.meals.isEmpty()) {
         viewModel2.getDish(id)
@@ -49,7 +49,7 @@ fun DishScreen(
 
     Scaffold(
         topBar = {
-            AppBar(title = "Meals for $id", navController = navController)
+            AppBar(title = "Saucer", navController = navController)
         }
     ) {
         if (viewModel2.instructionsUiState.loading) {
@@ -58,8 +58,8 @@ fun DishScreen(
                 contentAlignment = Alignment.Center
             ) {
                 LinearProgressIndicator(
-                    modifier = Modifier.width(100.dp),
-                    color = Color(229, 204, 255, 255)
+                    modifier = Modifier.width(80.dp),
+                    color = Color(117, 14, 224, 255)
                 )
             }
         } else {
@@ -93,6 +93,7 @@ fun DishScreen(
                         meal.ingredient19,
                         meal.ingredient20
                     )
+
                     Column(
                         modifier = Modifier
                             .padding(16.dp)
@@ -127,16 +128,15 @@ fun DishScreen(
                         for (ingredient in ingredients) {
                             if (ingredient != "" && ingredient != null) {
                                 Text(
-                                    text = "$i) $ingredient",
+                                    text = "$recorrido) $ingredient",
                                     textAlign = TextAlign.Left,
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(8.dp)
                                 )
                             }
-                            i++;
+                            recorrido++
                         }
-
                         Text(
                             text = "Instructions:",
                             textAlign = TextAlign.Left,
@@ -148,19 +148,30 @@ fun DishScreen(
                         )
                         Text(
                             text = meal.instructions,
-                            textAlign = TextAlign.Left,
+                            textAlign = TextAlign.Justify,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(8.dp)
+                        )
+                        Text(text = "Extra information:",
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            fontSize = 18.sp
                         )
 
                         if (meal.youtube == ""){
                             Text(
                                 text = "No YouTube video available",
-                                textAlign = TextAlign.Left,
+                                textAlign = TextAlign.Center,
+                                fontStyle = FontStyle.Italic,
+                                fontWeight = FontWeight.Bold,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(8.dp)
+                                    .padding(8.dp),
+                                fontSize = 14.sp
                             )
                         }else{
                             Button(
@@ -178,6 +189,38 @@ fun DishScreen(
                             {
                                 Text(
                                     text = "Watch on YouTube",
+                                    fontSize = 16.sp,
+                                    color = Color(199, 158, 226, 255),
+                                )
+                            }
+                        }
+                        if (meal.source == "") {
+                            Text(
+                                text = "No source available",
+                                textAlign = TextAlign.Center,
+                                fontStyle = FontStyle.Italic,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(8.dp),
+                                fontSize = 14.sp
+                            )
+                        } else{
+                            Button(
+                                onClick = {
+                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(meal.source))
+                                    context.startActivity(intent)
+                                },
+                                modifier = Modifier
+                                    .width(250.dp)
+                                    .align(Alignment.CenterHorizontally),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(80, 0, 131, 255),
+                                )
+                            )
+                            {
+                                Text(
+                                    text = "Go to source",
                                     fontSize = 16.sp,
                                     color = Color(199, 158, 226, 255),
                                 )

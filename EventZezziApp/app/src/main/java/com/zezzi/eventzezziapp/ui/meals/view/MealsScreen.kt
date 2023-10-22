@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -13,9 +14,9 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,68 +34,71 @@ import com.zezzi.eventzezziapp.navigation.NavigationState
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-fun MealsCategoriesScreen(
+fun MealsScreen(
     navController: NavController,
-    viewModel: MealsCategoriesViewModel = viewModel()
+    category: String,
+    viewModel2: DishesCategoriesViewModel = viewModel()
 ) {
-    if (viewModel.categoryUiState.categories.isEmpty()) {
-        viewModel.getMeals()
+    if (viewModel2.mealsUiState.meals.isEmpty()) {
+        viewModel2.getDishes(category)
     }
 
     Scaffold(
         topBar = {
-            AppBar(title = "Categories", navController = navController)
+            AppBar(title = "Meals for $category", navController = navController)
         }
     ) {
-        if (viewModel.categoryUiState.loading) {
+        if (viewModel2.mealsUiState.loading) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                LinearProgressIndicator(
-                    modifier = Modifier.width(80.dp),
+                CircularProgressIndicator(
+                    modifier = Modifier.width(64.dp),
                     color = Color(117, 14, 224, 255)
                 )
             }
         } else {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                contentPadding = it,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color = Color(185, 125, 246))
-
-            ) {
-                items(viewModel.categoryUiState.categories) { meal ->
-                    Card(
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            contentPadding = it,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = Color(185, 125, 246))
+        ) {
+            items(viewModel2.mealsUiState.meals) { dish ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp)
+                        .padding(8.dp)
+                        .shadow(
+                            elevation = 10.dp,
+                            shape = RoundedCornerShape(20.dp),
+                        ),
+                    onClick = {
+                        navController.navigate("${NavigationState.Dish.route}/${dish.id}")
+                    }
+                ) {
+                    Column(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .shadow(
-                                elevation = 10.dp,
-                                shape = RoundedCornerShape(20.dp),
-                            ),
-                        onClick = {
-                            navController.navigate("${NavigationState.Meals.route}/${meal.name}")
-                        }
+                            .padding(16.dp)
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Column(
+                        Text(
+                            text = dish.name,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold,
                             modifier = Modifier
-                                .padding(16.dp)
-                                .fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = meal.name,
-                                textAlign = TextAlign.Center,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(8.dp)
-                            )
-                            AsyncImage(
-                                model = meal.imageUrl,
-                                contentDescription = null,
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                        )
+                        AsyncImage(
+                            model = dish.imageUrl,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .height(200.dp)
                             )
                         }
                     }

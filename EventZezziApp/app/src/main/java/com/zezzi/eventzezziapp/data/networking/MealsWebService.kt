@@ -1,5 +1,7 @@
 package com.zezzi.eventzezziapp.data.networking
 
+import com.zezzi.eventzezziapp.data.networking.response.DishesCategoriesResponse
+import com.zezzi.eventzezziapp.data.networking.response.InstructionsCategoriesResponse
 import com.zezzi.eventzezziapp.data.networking.response.MealsCategoriesResponse
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -19,5 +21,13 @@ class MealsWebService {
 
     suspend fun getMeals(): MealsCategoriesResponse {
         return api.getMeals()
+    }
+
+    suspend fun getDishes(category: String): DishesCategoriesResponse {
+        return api.getDishes(category)
+    }
+
+    suspend fun getDish(id: String): InstructionsCategoriesResponse {
+        return api.getDish(id)
     }
 }

@@ -7,12 +7,9 @@ data class InstructionsCategoriesResponse(val meals: List<InstructionsResponse>)
 data class InstructionsResponse(
     @SerializedName("idMeal") val id: String,
     @SerializedName("strMeal") val name: String,
-    @SerializedName("strDrinkAlternate") val drinkAlternate: String,
     @SerializedName("strCategory") val category: String,
-    @SerializedName("strArea") val area: String,
     @SerializedName("strInstructions") val instructions: String,
     @SerializedName("strMealThumb") val imageUrl: String,
-    @SerializedName("strTags") val tags: String,
     @SerializedName("strYoutube") val youtube: String,
     //Ingredients
     @SerializedName("strIngredient1") val ingredient1: String,
@@ -35,32 +32,8 @@ data class InstructionsResponse(
     @SerializedName("strIngredient18") val ingredient18: String,
     @SerializedName("strIngredient19") val ingredient19: String,
     @SerializedName("strIngredient20") val ingredient20: String,
-    //Measurements
-    @SerializedName("strMeasure1") val measure1: String,
-    @SerializedName("strMeasure2") val measure2: String,
-    @SerializedName("strMeasure3") val measure3: String,
-    @SerializedName("strMeasure4") val measure4: String,
-    @SerializedName("strMeasure5") val measure5: String,
-    @SerializedName("strMeasure6") val measure6: String,
-    @SerializedName("strMeasure7") val measure7: String,
-    @SerializedName("strMeasure8") val measure8: String,
-    @SerializedName("strMeasure9") val measure9: String,
-    @SerializedName("strMeasure10") val measure10: String,
-    @SerializedName("strMeasure11") val measure11: String,
-    @SerializedName("strMeasure12") val measure12: String,
-    @SerializedName("strMeasure13") val measure13: String,
-    @SerializedName("strMeasure14") val measure14: String,
-    @SerializedName("strMeasure15") val measure15: String,
-    @SerializedName("strMeasure16") val measure16: String,
-    @SerializedName("strMeasure17") val measure17: String,
-    @SerializedName("strMeasure18") val measure18: String,
-    @SerializedName("strMeasure19") val measure19: String,
-    @SerializedName("strMeasure20") val measure20: String,
     //Source
-    @SerializedName("strSource") val source: String,
-    @SerializedName("strImageSource") val imageSource: String,
-    @SerializedName("strCreativeCommonsConfirmed") val creativeCommonsConfirmed: String,
-    @SerializedName("dateModified") val dateModified: String,
+    @SerializedName("strSource") val source: String
 
 
 

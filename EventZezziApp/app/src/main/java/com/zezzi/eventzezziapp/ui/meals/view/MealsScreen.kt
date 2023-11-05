@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material3.CircularProgressIndicator
@@ -30,9 +29,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.zezzi.eventzezziapp.navigation.AppBar
-import com.zezzi.eventzezziapp.navigation.NavigationState
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MealsScreen(
     navController: NavController,
@@ -76,9 +74,10 @@ fun MealsScreen(
                             elevation = 10.dp,
                             shape = RoundedCornerShape(20.dp),
                         ),
-                    onClick = {
-                        navController.navigate("${NavigationState.Dish.route}/${dish.id}")
-                    }
+                    //Se comento esta parte porque hacer la parte de los ingredientes es bastante complicado
+                    //onClick = {
+                      //  navController.navigate("${NavigationState.Dish.route}/${dish.id}")
+                    //}
                 ) {
                     Column(
                         modifier = Modifier
